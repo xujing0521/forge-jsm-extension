@@ -1,0 +1,56 @@
+modules:
+  jiraServiceManagement:portalRequestCreatePropertyPanel:
+    - key: jsm-test-hello-world-portal-request-create-property-panel
+      resource: main
+      resolver:
+        function: resolver
+      viewportSize: small
+      unlicensedAccess:
+        - anonymous
+        - unlicensed
+        - customer
+  jiraServiceManagement:portalRequestDetail:
+    - key: jsm-test-detail-hello-world-panel
+      resource: detail
+      resolver:
+        function: resolver
+      viewportSize: medium
+      title: jsm-test-detail
+  jiraServiceManagement:portalFooter:
+    - key: jsm-footer
+      resource: footer/entry
+      resolver:
+        function: resolver-2
+      viewportSize: medium
+      unlicensedAccess:
+        - anonymous
+        - unlicensed
+        - customer
+  function:
+    - key: resolver
+      handler: index.handler
+    - key: resolver-2
+      handler: jsm-footer.handler
+permissions:
+  scopes:
+    - read:jira-user
+    - read:jira-work
+    - storage:app
+  content:
+    styles:
+      - unsafe-inline
+resources:
+  - key: main
+    path: static/hello-world/build
+  - key: detail
+    path: static/detail/build
+  - key: footer
+    path: static/footer/build
+    entry:
+      entry: jsm-footer.html
+app:
+  runtime:
+    name: nodejs24.x
+    memoryMB: 256
+    architecture: arm64
+  id: ari:cloud:ecosystem::app/9be149ab-66a9-4529-a21d-63a363a61a62
