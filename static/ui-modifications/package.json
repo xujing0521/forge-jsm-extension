@@ -1,0 +1,16 @@
+{
+  "name": "ui-modifications-frontend",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@forge/jira-bridge": "^1.0.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^6.0.0",
+    "vite": "^8.0.0"
+  }
+}

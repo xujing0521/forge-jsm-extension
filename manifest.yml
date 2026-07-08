@@ -54,6 +54,128 @@ modules:
       resolver:
         function: resolver-9
         method: controller-queue-listener
+  jiraServiceManagement:organizationPanel:
+    - key: jsm-org-panel
+      resource: others/entry
+      resolver:
+        function: resolver
+      viewportSize: medium
+      title: JSM ORG PANEL
+  jiraServiceManagement:queuePage:
+    - key: jsm-queue-page
+      resource: others/entry
+      resolver:
+        function: resolver
+      title: JSM QUEUE PAGE
+  jiraServiceManagement:portalHeader:
+    - key: jsm-portal-footer
+      resource: others/entry
+      resolver:
+        function: resolver
+      viewportSize: medium
+  jiraServiceManagement:portalProfilePanel:
+    - key: jsm-portal-profile-panel
+      resource: others/entry
+      resolver:
+        function: resolver
+      viewportSize: medium
+      title: PROFILE PANEL
+  jiraServiceManagement:portalRequestDetailPanel:
+    - key: jsm-request-detail-panel
+      resource: others/entry
+      resolver:
+        function: resolver
+      viewportSize: medium
+      title: REQUEST DETAIL PANEL
+  jiraServiceManagement:portalRequestViewAction:
+    - key: jsm-request-view-action
+      resource: others/entry-2
+      resolver:
+        function: resolver
+      viewportSize: medium
+      title: REQUEST-VIEW-ACTION
+      icon: https://developer.atlassian.com/platform/forge/images/issue-panel-icon.svg
+  jiraServiceManagement:portalSubheader:
+    - key: jsm-portal-subheader
+      resource: others/entry
+      resolver:
+        function: resolver
+      viewportSize: medium
+  jiraServiceManagement:portalUserMenuAction:
+    - key: jsm-portal-user-menu-action
+      resource: others/entry-2
+      resolver:
+        function: resolver
+      viewportSize: medium
+      title: USER MENU ACTION
+  jira:customField:
+    - key: jira-custom-field
+      name: CUSTOM FIELD
+      description: A hello world custom field.
+      type: string
+      view:
+        render: native
+        resource: custom-field/entry
+        experience:
+          - issue-view
+          - portal-view
+      edit:
+        resource: custom-field/entry-2
+        render: native
+        isInline: true
+        experience:
+          - issue-create
+          - issue-transition
+          - issue-view
+          - portal-request
+      unlicensedAccess:
+        - customer
+        - unlicensed
+        - anonymous
+  jira:customFieldType:
+    - key: jira-custom-field-type
+      name: CUSTOM FIELD TYPE
+      description: A hello world custom field.
+      type: string
+      view:
+        render: native
+        resource: custom-field-type/entry
+        experience:
+          - issue-view
+          - portal-view
+      edit:
+        resource: custom-field-type/entry-2
+        render: native
+        isInline: true
+        experience:
+          - issue-create
+          - issue-transition
+          - issue-view
+          - portal-request
+        validation:
+          expression: value == null || !!value.match(configuration?.regex || "^[A-Za-z]+$")
+          errorMessage: The value is invalid
+      contextConfig:
+        resource: custom-field-type/entry-3
+        layout: basic
+        render: native
+      unlicensedAccess:
+        - customer
+        - unlicensed
+        - anonymous
+  jira:uiModifications:
+    - key: jira-ui-modifications
+      title: UI MODIFICATIONS
+      resource: ui-modifications/entry
+      unlicensedAccess:
+        - customer
+        - unlicensed
+        - anonymous
+  trigger:
+    - key: jira-ui-modifications-install
+      function: resolver-10
+      events:
+        - avi:forge:installed:app
   function:
     - key: resolver
       handler: index.handler
@@ -74,13 +196,16 @@ modules:
       timeoutSeconds: 900
     - key: resolver-9
       handler: jsm-assets-import.controllerQueueHandler
-      timeoutSeconds: 900
+    - key: resolver-10
+      handler: jira-ui-modifications.run
 permissions:
   scopes:
     - read:jira-user
     - read:jira-work
     - storage:app
     - import:import-configuration:cmdb
+    - manage:jira-configuration
+    - write:jira-work
   content:
     styles:
       - unsafe-inline
@@ -97,6 +222,26 @@ resources:
     path: src/frontend/assets-import
     entry:
       entry: jsm-assets-import.jsx
+  - key: others
+    path: static/others/build
+    entry:
+      entry: jsm-org-panel.html
+      entry-2: jsm-request-view-action.html
+  - key: custom-field
+    path: src/frontend/custom-field
+    entry:
+      entry: jira-custom-field-main.jsx
+      entry-2: jira-custom-field-edit.jsx
+  - key: custom-field-type
+    path: src/frontend/custom-field-type
+    entry:
+      entry: jira-custom-field-type-main.jsx
+      entry-2: jira-custom-field-type-edit.jsx
+      entry-3: jira-custom-field-type-config.jsx
+  - key: ui-modifications
+    path: static/ui-modifications/build
+    entry:
+      entry: jira-ui-modifications.html
 app:
   runtime:
     name: nodejs24.x
