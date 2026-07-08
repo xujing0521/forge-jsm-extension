@@ -26,16 +26,61 @@ modules:
         - anonymous
         - unlicensed
         - customer
+  jiraServiceManagement:assetsImportType:
+    - key: jsm-assets-import-ait
+      resource: assets-import/entry
+      resolver:
+        function: resolver-3
+      render: native
+      title: JSM Assets Import
+      description: Import devices from external sources into Assets via Forge.
+      icon: https://developer.atlassian.com/platform/forge/images/icons/issue-panel-icon.svg
+      onDeleteImport:
+        function: resolver-4
+      startImport:
+        function: resolver-5
+      stopImport:
+        function: resolver-6
+      importStatus:
+        function: resolver-7
+  consumer:
+    - key: jsm-assets-import-worker
+      queue: worker-queue
+      resolver:
+        function: resolver-8
+        method: worker-queue-listener
+    - key: jsm-assets-import-controller
+      queue: controller-queue
+      resolver:
+        function: resolver-9
+        method: controller-queue-listener
   function:
     - key: resolver
       handler: index.handler
     - key: resolver-2
       handler: jsm-footer.handler
+    - key: resolver-3
+      handler: jsm-assets-import.handler
+    - key: resolver-4
+      handler: jsm-assets-import.onDeleteImport
+    - key: resolver-5
+      handler: jsm-assets-import.startImport
+    - key: resolver-6
+      handler: jsm-assets-import.stopImport
+    - key: resolver-7
+      handler: jsm-assets-import.importStatus
+    - key: resolver-8
+      handler: jsm-assets-import.workerQueueHandler
+      timeoutSeconds: 900
+    - key: resolver-9
+      handler: jsm-assets-import.controllerQueueHandler
+      timeoutSeconds: 900
 permissions:
   scopes:
     - read:jira-user
     - read:jira-work
     - storage:app
+    - import:import-configuration:cmdb
   content:
     styles:
       - unsafe-inline
@@ -48,6 +93,10 @@ resources:
     path: static/footer/build
     entry:
       entry: jsm-footer.html
+  - key: assets-import
+    path: src/frontend/assets-import
+    entry:
+      entry: jsm-assets-import.jsx
 app:
   runtime:
     name: nodejs24.x
